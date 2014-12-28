@@ -1,0 +1,42 @@
+(page "index.html"
+  (:require
+    [tailrecursion.hoplon.svg :as svg]
+    [tailrecursion.hoplon.reload :refer [reload-all]]))
+
+(reload-all 1000)
+
+(defc base-triangulo 30)
+(defc altura-triangulo 40)
+(defc= area-triangulo (* 0.5 base-triangulo altura-triangulo))
+
+(defc largura 1000)
+(defc altura 400)
+
+(html
+  (head)
+  (body
+    (form
+      (label "Base:") (br)
+      (input :type "number" :value base-triangulo
+        :change #(reset! base-triangulo (.val (js/jQuery (.-target %))))
+        :keyup #(reset! base-triangulo (.val (js/jQuery (.-target %))))) (br)
+      (label "Altura:") (br)
+      (input :type "number" :value altura-triangulo
+        :change #(reset! altura-triangulo (.val (js/jQuery (.-target %))))
+        :keyup #(reset! altura-triangulo (.val (js/jQuery (.-target %)))))) (br)
+    (p (text "Área do triângulo: ~{area-triangulo}"))
+    (h2 "Desenho")
+    (svg/svg :width largura :height altura
+      :css {:border "1px solid black"}
+      (svg/text
+       :x 10
+       :y 20
+       (text "Tela: ~{largura}x~{altura}"))
+      (svg/polygon
+        :transform (cell= (str "translate("
+                            (* (- largura base-triangulo) 0.5)
+                            " "
+                            (* (- altura altura-triangulo) 0.5) ")"))
+        :points (cell= (str "0,0 0," altura-triangulo " " base-triangulo "," altura-triangulo)))
+      )
+    ))
