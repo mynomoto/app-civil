@@ -12,6 +12,15 @@
 (defc largura 1000)
 (defc altura 400)
 
+(defc= result
+  (str
+    "A base é               " base-triangulo   "\n"
+    "A altura é             " altura-triangulo "\n"
+    "A área do triângulo é: " area-triangulo   "\n"))
+
+(defc= export-txt
+  (str "data:text/plain;charset=utf-8," (js/encodeURI result)))
+
 (html
   (head)
   (body
@@ -25,6 +34,11 @@
         :change #(reset! altura-triangulo (.val (js/jQuery (.-target %))))
         :keyup #(reset! altura-triangulo (.val (js/jQuery (.-target %)))))) (br)
     (p (text "Área do triângulo: ~{area-triangulo}"))
+    (a
+      :href export-txt
+      :download "triangulo.txt"
+      "Gerar txt")
+
     (h2 "Desenho")
     (svg/svg :width largura :height altura
       :css {:border "1px solid black"}
